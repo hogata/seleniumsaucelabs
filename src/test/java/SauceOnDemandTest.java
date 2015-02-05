@@ -1,8 +1,10 @@
 import com.saucelabs.common.SauceOnDemandAuthentication;
 import com.saucelabs.common.SauceOnDemandSessionIdProvider;
 import com.saucelabs.junit.SauceOnDemandTestWatcher;
+
 import org.junit.*;
 import org.junit.rules.TestName;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -26,7 +28,7 @@ public class SauceOnDemandTest implements SauceOnDemandSessionIdProvider {
 
     private WebDriver webDriver;
     private String sessionId;
-
+	private String baseUrl;
     public SauceOnDemandAuthentication authentication = new SauceOnDemandAuthentication();
 
     public @Rule
@@ -51,6 +53,7 @@ public class SauceOnDemandTest implements SauceOnDemandSessionIdProvider {
         }
         capabilities.setCapability("platform", Utils.readPropertyOrEnv("SELENIUM_PLATFORM", "XP"));
         capabilities.setCapability("browserName", Utils.readPropertyOrEnv("SELENIUM_BROWSER", "firefox"));
+	    baseUrl = "https://www.google.co.jp/";
         String username = Utils.readPropertyOrEnv("SAUCE_USER_NAME", "");
         String accessKey = Utils.readPropertyOrEnv("SAUCE_API_KEY", "");
         this.webDriver = new RemoteWebDriver(
@@ -62,8 +65,11 @@ public class SauceOnDemandTest implements SauceOnDemandSessionIdProvider {
 
     @Test
     public void validateTitle() throws Exception {
-        webDriver.get("https://saucelabs.com/test/guinea-pig");
-        assertEquals("I am a page title - Sauce Labs", webDriver.getTitle());
+//        webDriver.get("https://saucelabs.com/test/guinea-pig");
+//        assertEquals("I am a page title - Sauce Labs", webDriver.getTitle());
+	    webDriver.get(baseUrl + "/search?q=nttcommunications&ie=utf-8&oe=utf-8&hl=ja");
+	    webDriver.findElement(By.linkText("NTTコミュニケーションズ オフィシャルサイト")).click();
+
     }
 
     @After
